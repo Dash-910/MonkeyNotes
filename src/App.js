@@ -4,11 +4,12 @@ import Navbar from "./components/Navbar";
 import {Home} from './components/Home';
 import About from './components/About'
 import { Alert } from './components/Alert';
-
+import NoteState from './context/notes/Notestate';
 
 function App() {
   return (
     <>
+    <NoteState>
     <Router>
       <Navbar/>
       <Alert message="This is demo alert"/>
@@ -17,6 +18,8 @@ function App() {
         <Route exact path="/about" element={<About/>}/>
       </Routes>
     </Router>
+    </NoteState>
+   
     </>
   );
 }

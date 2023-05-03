@@ -1,14 +1,11 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Routes,
-  Route,
-  Link,
-} from "react-router-dom";
+import Notes from './Notes'
 
 export const Home =() =>{
     return (
-        <></>
+        <>
+        <Notes/>
+        </>
     )
 }
+
