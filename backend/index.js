@@ -1,11 +1,11 @@
 const connectToMongo = require("./db");
-
 const express = require("express");
-//var cors = require("cors");
+var cors = require('cors');
 connectToMongo();
 
 const app = express();
 const port = 5000;
+app.use(cors())
 // we are adding the express.json() middleware function to the middleware stack for all routes. This means that any incoming requests with a JSON payload will be automatically parsed by this middleware function.
 app.use(express.json());
 
