@@ -1,36 +1,48 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import noteContext from "../context/notes/notesContext"
+import noteContext from "../Context/notes/noteContext"
+import AddNote  from './AddNote';
 import Noteitem from './Noteitem';
-import AddNote from './AddNote';
+import { useNavigate } from 'react-router-dom'
 
-const Notes = () => {
-    const context = useContext(noteContext);
-    const { notes, getNotes, editNote } = context;
-    useEffect(() => {
+
+const Notes = (props) => {
+ const navigate = useNavigate();
+  const context = useContext(noteContext);
+  const {notes, getNotes, editNote} = context;
+
+  useEffect(() => {
+    if(localStorage.getItem('token')){
         getNotes()
-        // eslint-disable-next-line
-    }, [])
-    const ref = useRef(null)
-    const refClose = useRef(null)
-    const [note, setNote] = useState({id: "", etitle: "", edescription: "", etag: ""})
+        }
+        else{
+            navigate("/login")
+            
+        }
 
-    const updateNote = (currentNote) => {
-        ref.current.click();
-        setNote({id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag:currentNote.tag})
-    }
+      // eslint-disable-next-line 
+  }, [])
+  const ref =useRef(null)
+  const refClose =useRef(null)
+  const [note, setNote] = useState({id:"", etitle: "", edescription: "", etag: ""})
 
-    const handleClick = (e)=>{ 
-        editNote(note.id, note.etitle, note.edescription, note.etag)
-        refClose.current.click();
-    }
+  const updateNote = (currentNote) => {
+    ref.current.click();
+    setNote({id: currentNote._id ,etitle: currentNote.title, edescription: currentNote.description, etag:currentNote.tag})
+}
+const handleClick = (e)=>{
+  refClose.current.click();
+  editNote(note.id, note.etitle, note.edescription, note.etag)
+  props.showAlert("Updated Successfully","success")
 
-    const onChange = (e)=>{
-        setNote({...note, [e.target.name]: e.target.value})
-    }
+}
 
-    return (
-        <>
-            <AddNote />
+
+const onChange = (e)=>{
+    setNote({...note, [e.target.name]: e.target.value})
+}
+  return (
+    <>
+    <AddNote showAlert={props.showAlert}/>
             <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Launch demo modal
             </button>
@@ -45,7 +57,7 @@ const Notes = () => {
                             <form className="my-3">
                                 <div className="mb-3">
                                     <label htmlFor="title" className="form-label">Title</label>
-                                    <input type="text" className="form-control" id="etitle" name="etitle" value={note.etitle} aria-describedby="emailHelp" onChange={onChange} minLength={5} required/>
+                                    <input type="text" className="form-control" id="etitle" name="etitle" value={note.etitle} aria-describedby="emailHelp" onChange={onChange}minLength={5} required />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Description</label>
@@ -53,9 +65,9 @@ const Notes = () => {
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="tag" className="form-label">Tag</label>
-                                    <input type="text" className="form-control" id="etag" name="etag" value={note.etag} onChange={onChange} />
+                                    <input type="text" className="form-control" id="etag" name="etag" value={note.etag} onChange={onChange} minLength={5} required />
                                 </div>
- 
+
                             </form>
                         </div>
                         <div className="modal-footer">
@@ -72,12 +84,11 @@ const Notes = () => {
                 {notes.length===0 && 'No notes to display'}
                 </div>
                 {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} note={note} />
+                    return <Noteitem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
                 })}
             </div>
-        </>
-    )
+   </>
+  )
 }
 
 export default Notes
-
