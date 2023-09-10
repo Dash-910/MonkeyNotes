@@ -1,35 +1,42 @@
 import React, {useState} from 'react'
-import {useHistory} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-const Login =(props)=>{
-    const [credentials,setCrendentials]=useState({email:"",password:""})    
-    let history = useHistory();
 
-    const handleSubmit = async(e)=>{
+const Login = (props) => {
+    const [credentials, setCredentials] = useState({email: "", password: ""}) 
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(
-        "http://localhost:5000/api/auth/login",{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
+        const response = await fetch("http://localhost:5000/api/auth/login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            body:JSON.stringify({email:credentials.email,password:credentials.password})
+            body: JSON.stringify({email: credentials.email, password: credentials.password})
         });
         const json = await response.json()
         console.log(json);
-        if(json.success){
-            localStorage.setItem('token',json.authtoken);
-            history.push("/")
+        if (json.success){
+            // Save the auth token and redirect
+            localStorage.setItem('token', json.authtoken); 
+            props.showAlert(" Logged in  Successfully ", "success");
+            navigate("/");
+
         }
         else{
-            alert("Invalid credentials");
+            props.showAlert("Invalid Credentials", "danger");
+
         }
     }
-    const onChange=(e)=>{
-        setCrendentials({...credentials,[e.target.name]:e.target.value})
+
+    const onChange = (e)=>{
+        setCredentials({...credentials, [e.target.name]: e.target.value})
     }
+
     return (
-        <div>
+        <div className='mt-3'>
+            <h2>Login to continue iNotebook</h2>
             <form  onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
@@ -46,4 +53,5 @@ const Login =(props)=>{
         </div>
     )
 }
-export default Login
+
+export default Login 

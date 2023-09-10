@@ -1,10 +1,12 @@
-const mongoose =require('mongoose')
-const mongoURI ="mongodb://localhost:27017/monkeynotes"
+const mongoose =require('mongoose');
 
-const connectToMongo =  () => {
-    mongoose.connect(mongoURI)
-    .then( ()=>
-       console.log("Connected to mongo Successful")
-   )
+
+
+const mongoURI = "mongodb://127.0.0.1:27017/monkeynotes?directConnection=true";
+
+const connectToMongo=()=>{
+    mongoose.connect(mongoURI,()=>{
+        console.log("Connect to Mongo Successfully");
+    })
 }
-module.exports= connectToMongo;
+module.exports=connectToMongo;
